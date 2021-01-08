@@ -47,6 +47,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             # handled by the data update coordinator.
             data = {}
             scales = [
+                Scale.SECOND.value,
                 Scale.MINUTE.value,
                 Scale.DAY.value,
                 Scale.MONTH.value
@@ -75,7 +76,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         name='sensor',
         update_method=async_update_data,
         # Polling interval. Will only be polled if there are subscribers.
-        update_interval=timedelta(seconds=60),
+        update_interval=timedelta(seconds=5),
     )
 
     await coordinator.async_refresh()
@@ -138,7 +139,7 @@ class CurrentVuePowerSensor(CoordinatorEntity, Entity):
     @property
     def unique_id(self):
         """Unique ID for the sensor"""
-        if self._scale == Scale.MINUTE.value:
+        if self._scale == Scale.SECOND.value:
             return f'sensor.emporia_vue.instant.{self._channel.device_gid}-{self._channel.channel_num}'
         else:
             return f'sensor.emporia_vue.{self._scale}.{self._channel.device_gid}-{self._channel.channel_num}'
